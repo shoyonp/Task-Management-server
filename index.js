@@ -26,7 +26,9 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db("task-manager").collection("users");
+    const taskCollection = client.db("task-manager").collection("tasks");
 
+    // post a user details in database
     app.post("/users", async (req, res) => {
       const user = req.body;
       const query = { email: user.email };
@@ -35,6 +37,25 @@ async function run() {
         return res.send({ message: "user already exiests" });
       }
       const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
+    // get users from database
+    // app.get("/users" ,async(req,res)=>{
+    //   const result = await userCollection.find().toArray()
+    //   res.send(result)
+    // })
+
+    // post a task  in database
+    app.post("/tasks", async (req, res) => {
+      const task = req.body;
+      const result = await taskCollection.insertOne(task);
+      res.send(result);
+    });
+
+    // get task from database
+    app.get("/tasks", async (req, res) => {
+      const result = await taskCollection.find().toArray();
       res.send(result);
     });
 
